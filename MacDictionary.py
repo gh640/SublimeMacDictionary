@@ -51,15 +51,18 @@ body {
 }
 
 .mac-dictionary-definition .close-wrapper {
+    margin-top: 20px;
 }
 
 .mac-dictionary-definition .close {
     background-color: var(--mdpopups-admon-error-bg);
     color: var(--mdpopups-admon-error-fg);
+    font-size: 10px;
     padding: 1px 6px;
     text-decoration: none;
 }
 '''
+POPUP_MAX_WIDTH = 400
 
 
 class MacDictionaryShowDefForSelectionCommand(sublime_plugin.TextCommand):
@@ -119,6 +122,7 @@ class MacDictionaryShowDefForSelectionCommand(sublime_plugin.TextCommand):
                             css=POPUP_CSS,
                             flags=sublime.HIDE_ON_MOUSE_MOVE_AWAY,
                             location=popup_info['location'],
+                            max_width=POPUP_MAX_WIDTH,
                             wrapper_class=POPUP_WRAPPER_CLASS,
                             on_navigate=self.on_popup_navigate)
 

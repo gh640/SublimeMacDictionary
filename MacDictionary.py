@@ -114,8 +114,8 @@ class MacDictionaryShowDefForSelectionCommand(sublime_plugin.TextCommand):
 
         data = popup_info['data']
         content = POPUP_TEMPLATE.format(word=data['word'],
-                                          word_escaped=data['word_escaped'],
-                                          definition=data['definition'])
+                                        word_escaped=data['word_escaped'],
+                                        definition=data['definition'])
 
         mdpopups.show_popup(self.view,
                             content,
@@ -129,7 +129,13 @@ class MacDictionaryShowDefForSelectionCommand(sublime_plugin.TextCommand):
     def on_popup_navigate(self, href):
         if href.startswith(POPUP_HREF_PREFIX_OPEN):
             word = href[len(POPUP_HREF_PREFIX_OPEN):]
-            subprocess.Popen(['open', 'dict://{}'.format(word)])
+
+            try:
+                subprocess.check_call(['open', 'dict://{}'.format(word)])
+            except subprocess.SubprocessError as e:
+                message = 'Dictionary.app could not be opened.'
+                status_message(self.view, message)
+
             mdpopups.hide_popup(self.view)
         elif href == POPUP_HREF_CLOSE:
             mdpopups.hide_popup(self.view)

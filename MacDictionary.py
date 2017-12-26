@@ -75,6 +75,11 @@ class MacDictionaryShowDefForSelectionCommand(sublime_plugin.TextCommand):
             return
 
         region, word_raw = self._get_selected_region_info()
+
+        if region.empty():
+            status_message(self.view, 'The selected text is empty.')
+            return
+
         word, definition = self._get_definition(word_raw)
 
         if not definition:

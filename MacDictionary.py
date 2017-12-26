@@ -78,23 +78,14 @@ class MacDictionaryShowDefForSelectionCommand(sublime_plugin.TextCommand):
         word, definition = self._get_definition(word_raw)
 
         if not definition:
-            status_message(self.view, 'No definition found.')
             return
 
-        popup_info = {
-            'data': {
-                'word': word,
-                'word_escaped': html.escape(word),
-                'definition': html.escape(trim_string(definition,
-                                                      POPUP_BODY_MAX_LENGTH)),
-            },
-            'location': region.end(),
-        }
-
+        popup_info = self._prepare_popup_info(region, word, definition)
         self._show_popup(popup_info)
 
     def _get_selected_region_info(self):
         region = self.view.sel()[0]
+
         return (region, self.view.substr(region))
 
     def _get_definition(self, word):
@@ -102,11 +93,23 @@ class MacDictionaryShowDefForSelectionCommand(sublime_plugin.TextCommand):
         runner.run(word)
 
         if not runner.success:
+            status_message(self.view, runner.error)
             return None, None
 
         output = json.loads(runner.output)
 
         return output['word'], output['definition']
+
+    def _prepare_popup_info(self, region, word, definition):
+        data = {
+            'word': word,
+            'word_escaped': self._escape(word),
+            'definition': self._escape(trim(definition, POPUP_BODY_MAX_LENGTH)),
+        }
+        return {
+            'data': data,
+            'location': region.end(),
+        }
 
     def _show_popup(self, popup_info):
         if mdpopups.is_popup_visible(self.view):
@@ -140,6 +143,9 @@ class MacDictionaryShowDefForSelectionCommand(sublime_plugin.TextCommand):
         elif href == POPUP_HREF_CLOSE:
             mdpopups.hide_popup(self.view)
 
+    def _escape(self, string):
+        return html.escape(string, False)
+
 
 class MacDictionaryRunner:
     '''Consults the MacOS dictionary.
@@ -151,13 +157,17 @@ class MacDictionaryRunner:
         try:
             process = subprocess.Popen(**popen_args)
             stdout, stderr = process.communicate(input=word.encode('utf-8'))
-        except OSError as e:
+        except subprocess.SubprocessError as e:
             self.error = str(e)
             self.success = False
         else:
-            self.output = stdout.decode('utf-8')
-            self.error = stderr.decode('utf-8')
-            self.success = True
+            if process.returncode == 0:
+                self.output = stdout.decode('utf-8')
+                self.success = True
+            else:
+                self.error = stderr.decode('utf-8')
+                self.success = False
+
 
     def _prepare_subprocess_args(self):
         popen_args = {
@@ -183,11 +193,12 @@ class MacDictionaryRunner:
 def status_message(view, message, ttl=4000):
     '''Shows the status message for the package.
     '''
+    print(message)
     view.set_status(STATUS_KEY, 'MacDictinary: {}'.format(message))
     sublime.set_timeout(lambda: view.erase_status(STATUS_KEY), ttl)
 
 
-def trim_string(string, max_length, ellipsis='...'):
+def trim(string, max_length, ellipsis='...'):
     '''Trims a string.
     '''
     if string[max_length:]:

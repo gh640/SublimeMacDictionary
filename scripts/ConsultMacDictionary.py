@@ -50,6 +50,6 @@ if __name__ == '__main__':
     word, definition = get_dict_definition(word_raw)
 
     print(json.dumps({
-        'word': word.encode(ENCODING),
-        'definition': definition.encode(ENCODING),
+        'word': word,
+        'definition': definition,
     }))

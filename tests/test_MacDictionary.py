@@ -1,6 +1,8 @@
 # coding: utf-8
 
 '''Tests ConsultMacDictionary.py.
+
+See https://github.com/SublimeText/UnitTesting .
 '''
 
 import io

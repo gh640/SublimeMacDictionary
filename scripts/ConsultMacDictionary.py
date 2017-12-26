@@ -9,6 +9,7 @@ echo [the word to translate] | /usr/bin/python2.7 __file__
 '''
 
 
+import json
 import sys
 
 from DictionaryServices import DCSGetTermRangeInString, DCSCopyTextDefinition
@@ -25,16 +26,17 @@ def get_stdin_string_stripped():
     return sys.stdin.read().strip()
 
 
-def get_dict_definition(word):
+def get_dict_definition(word_raw):
     '''Gets the definition of the specified word.
     '''
-    word_range = DCSGetTermRangeInString(DICTIONARY, word, OFFSET)
+    word_range = DCSGetTermRangeInString(DICTIONARY, word_raw, OFFSET)
     try:
-        word_definition = DCSCopyTextDefinition(DICTIONARY, word, word_range)
+        word = word_raw[word_range.location:word_range.location + word_range.length]
+        definition = DCSCopyTextDefinition(DICTIONARY, word_raw, word_range)
     except IndexError as e:
         raise DefinitionNotFoundException('The definition not found.')
 
-    return word_definition
+    return word, definition
 
 
 class DefinitionNotFoundException(Exception):
@@ -44,6 +46,10 @@ class DefinitionNotFoundException(Exception):
 
 
 if __name__ == '__main__':
-    word = get_stdin_string_stripped().decode(ENCODING)
-    definition = get_dict_definition(word).encode(ENCODING)
-    print(definition)
+    word_raw = get_stdin_string_stripped().decode(ENCODING)
+    word, definition = get_dict_definition(word_raw)
+
+    print(json.dumps({
+        'word': word.encode(ENCODING),
+        'definition': definition.encode(ENCODING),
+    }))

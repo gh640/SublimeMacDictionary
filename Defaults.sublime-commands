@@ -1,10 +1,6 @@
 [
     {
-        "caption": "MacDictionary: Show definitions",
-        "command": "mac_dictionary_show_defs_for_selection"
-    },
-    {
-        "caption": "MacDictionary: Clear definitions",
-        "command": "mac_dictionary_clear_defs_for_selection"
+        "caption": "MacDictionary: Show definition",
+        "command": "mac_dictionary_show_def_for_selection"
     }
 ]

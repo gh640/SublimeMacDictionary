@@ -199,7 +199,7 @@ def status_message(view, message, ttl=4000):
     '''Shows the status message for the package.
     '''
     print(message)
-    view.set_status(STATUS_KEY, 'MacDictinary: {}'.format(message))
+    view.set_status(STATUS_KEY, 'MacDictionary: {}'.format(message))
     sublime.set_timeout(lambda: view.erase_status(STATUS_KEY), ttl)
 
 

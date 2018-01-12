@@ -26,7 +26,7 @@ POPUP_TEMPLATE = '''
 <a class="close" href="''' + POPUP_HREF_CLOSE + '">' + chr(0x00D7) + '''</a>
 </div>
 '''
-POPUP_BODY_MAX_LENGTH = 400
+POPUP_BODY_MAX_LEN = 400
 POPUP_CSS = '''
 body {
     margin: 0;
@@ -66,9 +66,7 @@ POPUP_MAX_WIDTH = 400
 
 
 class MacDictionaryShowDefForSelectionCommand(sublime_plugin.TextCommand):
-    '''A command which shows a word definition in a popup.
-    '''
-
+    '''A command which shows a word definition in a popup.'''
     def run(self, edit):
         if len(self.view.sel()) != 1:
             status_message(self.view, 'Please select only one region.')
@@ -109,7 +107,7 @@ class MacDictionaryShowDefForSelectionCommand(sublime_plugin.TextCommand):
         data = {
             'word': word,
             'word_escaped': self._escape(word),
-            'definition': self._escape(trim(definition, POPUP_BODY_MAX_LENGTH)),
+            'definition': self._escape(trim(definition, POPUP_BODY_MAX_LEN)),
         }
         return {
             'data': data,
@@ -153,9 +151,7 @@ class MacDictionaryShowDefForSelectionCommand(sublime_plugin.TextCommand):
 
 
 class MacDictionaryRunner:
-    '''Consults the MacOS dictionary.
-    '''
-
+    '''Consults the MacOS dictionary.'''
     def run(self, word):
         popen_args = self._prepare_subprocess_args()
 
@@ -172,7 +168,6 @@ class MacDictionaryRunner:
             else:
                 self.error = stderr.decode('utf-8')
                 self.success = False
-
 
     def _prepare_subprocess_args(self):
         popen_args = {
@@ -196,16 +191,14 @@ class MacDictionaryRunner:
 
 
 def status_message(view, message, ttl=4000):
-    '''Shows the status message for the package.
-    '''
+    '''Shows the status message for the package.'''
     print(message)
     view.set_status(STATUS_KEY, 'MacDictionary: {}'.format(message))
     sublime.set_timeout(lambda: view.erase_status(STATUS_KEY), ttl)
 
 
 def trim(string, max_length, ellipsis='...'):
-    '''Trims a string.
-    '''
+    '''Trims a string.'''
     if string[max_length:]:
         return string[:max_length] + ellipsis
     else:

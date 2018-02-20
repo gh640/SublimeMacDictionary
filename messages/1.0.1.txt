@@ -1,0 +1,1 @@
+- Shortened the error message printed in console when definition is not found.

@@ -47,7 +47,11 @@ class DefinitionNotFoundException(Exception):
 
 if __name__ == '__main__':
     word_raw = get_stdin_string_stripped().decode(ENCODING)
-    word, definition = get_dict_definition(word_raw)
+
+    try:
+        word, definition = get_dict_definition(word_raw)
+    except DefinitionNotFoundException, e:
+        sys.exit(e.message)
 
     print(json.dumps({
         'word': word,

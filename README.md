@@ -12,7 +12,9 @@ This package depends on [Sublime Markdown Popups (mdpopups)](https://github.com/
 
 ## Installation
 
-...
+It's easy to install this package with [Package Control](https://packagecontrol.io/). If you haven't installed Package Control yet, first install it following the [instruction](https://packagecontrol.io/installation).
+
+Once you've installed Pacakge Control, restart your Sublime Text and open the command palette (<kbd>ctrl/cmd + shift + p</kbd>). Then, find and select `Package Control: Install Package`. You will see `MacDictionary` in the list and select it.
 
 
 ## Usage

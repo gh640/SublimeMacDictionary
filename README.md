@@ -29,6 +29,9 @@ This package provides the following command.
 
 You can run a command with the command palette (ctrl/cmd + shift + p).
 
+### Context menu (right click menu)
+
+Or, you can use the context menu item `Show definition` to open the definition popup.
 
 ## License
 

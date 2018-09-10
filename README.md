@@ -37,6 +37,8 @@ Or, you can use the context menu item `Show definition` to open the definition p
 
 Additionally, you can use a mode named `brute_mode` with which the package tries to generate a popup aggressively every time when you move your mouse cursor. With the mode enabled, you don't need to call the command.
 
+![SublimeMacDictionary animated capture for brute mode](https://raw.githubusercontent.com/gh640/SublimeMacDictionary/master/assets/images/capture-animation-brute_mode.gif)
+
 Of course, the mode is disabled by default. You can enable it through the package settings:
 
 ```json

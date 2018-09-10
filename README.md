@@ -33,6 +33,18 @@ You can run a command with the command palette (ctrl/cmd + shift + p).
 
 Or, you can use the context menu item `Show definition` to open the definition popup.
 
+### Brute mode
+
+Additionally, you can use a mode named `brute_mode` with which the package tries to generate a popup aggressively every time when you move your mouse cursor. With the mode enabled, you don't need to call the command.
+
+Of course, the mode is disabled by default. You can enable it through the package settings:
+
+```json
+{
+  "brute_mode": true
+}
+```
+
 ## License
 
 Licensed under the MIT license.

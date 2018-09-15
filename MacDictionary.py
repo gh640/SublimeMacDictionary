@@ -19,13 +19,21 @@ STATUS_KEY = 'mac-dictionary-definition'
 POPUP_WRAPPER_CLASS = 'mac-dictionary-definition'
 POPUP_HREF_PREFIX_OPEN = 'open-dict-app:'
 POPUP_HREF_CLOSE = 'close'
-POPUP_TEMPLATE = ('''
-<h1><a href="''' + POPUP_HREF_PREFIX_OPEN + '''{word_escaped}">{word}</a></h1>
+POPUP_TEMPLATE = (
+    '''
+<h1><a href="'''
+    + POPUP_HREF_PREFIX_OPEN
+    + '''{word_escaped}">{word}</a></h1>
 <p>{definition}</p>
 <div class="close-wrapper">
-<a class="close" href="''' + POPUP_HREF_CLOSE + '">' + chr(0x00D7) + '''</a>
+<a class="close" href="'''
+    + POPUP_HREF_CLOSE
+    + '">'
+    + chr(0x00D7)
+    + '''</a>
 </div>
-''')
+'''
+)
 POPUP_BODY_MAX_LEN = 400
 POPUP_CSS = '''
 body {
@@ -78,7 +86,7 @@ class MacDictionaryBruteEventListener(sublime_plugin.EventListener):
         if not word_raw:
             return
 
-        popup = MacDictionaryPopup(view, sublime.HIDE_ON_MOUSE_MOVE)
+        popup = MacDictionaryPopup(view)
         word, definition = popup.get_definition(word_raw)
         if not definition:
             return
@@ -114,9 +122,8 @@ class MacDictionaryShowDefForSelectionCommand(sublime_plugin.TextCommand):
 
 
 class MacDictionaryPopup:
-    def __init__(self, view, flags=sublime.HIDE_ON_MOUSE_MOVE_AWAY):
+    def __init__(self, view):
         self.view = view
-        self.flags = flags
 
     def get_definition(self, word):
         runner = MacDictionaryRunner()
@@ -157,7 +164,7 @@ class MacDictionaryPopup:
             self.view,
             content,
             css=POPUP_CSS,
-            flags=self.flags,
+            flags=sublime.HIDE_ON_MOUSE_MOVE_AWAY,
             location=popup_info['location'],
             max_width=POPUP_MAX_WIDTH,
             wrapper_class=POPUP_WRAPPER_CLASS,

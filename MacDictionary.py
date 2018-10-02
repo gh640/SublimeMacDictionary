@@ -233,7 +233,7 @@ class MacDictionaryRunner:
 class MacDictionaryBruteModeSwitchCommand(sublime_plugin.WindowCommand):
     '''A command which allow for switching the `brute_mode` setting.'''
 
-    OPTIONS = (['on', 'On'], ['off', 'Off'])
+    OPTIONS = (['on', 'Brute mode on'], ['off', 'Brute mode off'])
     SETTING_VALUE_MAP = (True, False)
 
     def run(self):

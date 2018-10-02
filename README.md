@@ -39,13 +39,15 @@ Additionally, you can use a mode named `brute_mode` with which the package tries
 
 ![SublimeMacDictionary animated capture for brute mode](https://raw.githubusercontent.com/gh640/SublimeMacDictionary/master/assets/images/capture-animation-brute_mode.gif)
 
-Of course, the mode is disabled by default. You can enable it through the package settings:
+The mode is disabled by default. You can enable it through the package settings:
 
 ```json
 {
   "brute_mode": true
 }
 ```
+
+You can also use `MacDictionary: Switch brute mode` in the Command Palette to switch the `brute_mode`.
 
 ## License
 

@@ -230,8 +230,37 @@ class MacDictionaryRunner:
         return os.environ.copy()
 
 
+class MacDictionaryBruteModeSwitchCommand(sublime_plugin.WindowCommand):
+    '''A command which allow for switching the `brute_mode` setting.'''
+
+    OPTIONS = (['on', 'On'], ['off', 'Off'])
+    SETTING_VALUE_MAP = (True, False)
+
+    def run(self):
+        self.window.show_quick_panel(self.OPTIONS, self.switch)
+
+    def switch(self, form_index):
+        if form_index < 0:
+            return
+
+        settings = load_settings()
+        settings.set('brute_mode', self._map_index_to_value(form_index))
+        save_settings()
+        status_message(
+            self.window.active_view(),
+            'Brute mode switched {}.'.format(self.OPTIONS[form_index][1]),
+        )
+
+    def _map_index_to_value(self, form_index):
+        return self.SETTING_VALUE_MAP[form_index]
+
+
 def load_settings():
     return sublime.load_settings('MacDictionary.sublime-settings')
+
+
+def save_settings():
+    sublime.save_settings('MacDictionary.sublime-settings')
 
 
 def status_message(view, message, ttl=4000):

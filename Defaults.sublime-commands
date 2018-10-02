@@ -2,5 +2,9 @@
     {
         "caption": "MacDictionary: Show definition",
         "command": "mac_dictionary_show_def_for_selection"
+    },
+    {
+        "caption": "MacDictionary: Switch brute mode",
+        "command": "mac_dictionary_brute_mode_switch"
     }
 ]

@@ -1,6 +1,6 @@
 # MacDictionary
 
-A Sublime Text 3 package which provides a popup function for the MacOS dictionary service.
+A Sublime Text 3 package which provides a popup function for the macOS dictionary service.
 
 ![SublimeMacDictionary capture](https://raw.githubusercontent.com/gh640/SublimeMacDictionary/master/assets/images/capture.png)
 
@@ -48,6 +48,12 @@ The mode is disabled by default. You can enable it through the package settings:
 ```
 
 You can also use `MacDictionary: Switch brute mode` in the Command Palette to switch the `brute_mode`.
+
+### Switching dictionaries
+
+Although the macOS dictionary has a range of built-in and downloadable dictionaries, Apple unfortunately does not provide an API to the one that is used. Therefore, the package will return the first match from all enabled dictionaries. If you want to change that, you can do so with a workaround: In dictionary.app, open the preferences and drag your preferred dictionary (such as a thesaurus) to the top. You should see that it now has also moved to the leftmost position in the selection bar on top of the main app window.
+
+After restarting sublime, the package will now use your new primary dictionary.
 
 ## License
 

@@ -23,11 +23,23 @@ Once you've installed Pacakge Control, restart your Sublime Text and open the co
 
 ### Commands
 
-This package provides the following command.
+This package provides the following commands.
 
-- MacDictionary: Show definition
+- MacDictionary: Show definition (`mac_dictionary_show_def_for_selection`)
+- MacDictionary: Switch brute mode (`mac_dictionary_brute_mode_switch`)
 
-You can run a command with the command palette (ctrl/cmd + shift + p).
+You can run these commands with the command palette (ctrl/cmd + shift + p).
+
+Also you can set any custom key binding to run a command:
+
+```json
+[
+  {
+    "keys": ["shift+ctrl+d"],
+    "command": "mac_dictionary_show_def_for_selection"
+  }
+]
+```
 
 ### Context menu (right click menu)
 

@@ -1,13 +1,8 @@
 # MacDictionary
 
-A Sublime Text 3 package which provides a popup function for the macOS dictionary service.
+A Sublime Text 3 / 4 package which provides a popup function for the macOS dictionary service.
 
 ![SublimeMacDictionary capture](https://raw.githubusercontent.com/gh640/SublimeMacDictionary/master/assets/images/capture.png)
-
-
-## Dependencies
-
-This package depends on [Sublime Markdown Popups (mdpopups)](https://github.com/facelessuser/sublime-markdown-popups/). You don't need to install it separately since it's automatically installed when you use [Package Control](https://packagecontrol.io/) to install this package.
 
 
 ## Installation

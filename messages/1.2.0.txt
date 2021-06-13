@@ -1,0 +1,2 @@
+- Added `.python-version` to use Python 3.8 instead of 3.3 on Sublime Text 4.
+- Stopped using mdpopups as it's not ready for Sublime Text 4.

@@ -1,6 +1,6 @@
 # coding: utf-8
 
-'''A Sublime Text 3 package which shows a word definition in a popup.
+'''A Sublime Text 3 / 4 package which shows a word definition in a popup.
 '''
 
 import html
@@ -11,19 +11,15 @@ import subprocess
 import sublime
 import sublime_plugin
 
-import mdpopups
-
-
 SYSTEM_PYTHON = '/usr/bin/python2.7'
 STATUS_KEY = 'mac-dictionary-definition'
-POPUP_WRAPPER_CLASS = 'mac-dictionary-definition'
 POPUP_HREF_PREFIX_OPEN = 'open-dict-app:'
 POPUP_HREF_CLOSE = 'close'
 POPUP_TEMPLATE = (
     '''
-<h1><a href="'''
+<p><a href="'''
     + POPUP_HREF_PREFIX_OPEN
-    + '''{word_escaped}">{word}</a></h1>
+    + '''{word_escaped}">{word}</a></p>
 <p>{definition}</p>
 <div class="close-wrapper">
 <a class="close" href="'''
@@ -35,41 +31,6 @@ POPUP_TEMPLATE = (
 '''
 )
 POPUP_BODY_MAX_LEN = 400
-POPUP_CSS = '''
-body {
-    margin: 0;
-    padding: 0;
-}
-.mac-dictionary-definition {
-    font-size: 12px;
-    line-height: 20px;
-    padding: 0 18px 10px 10px;
-}
-
-.mac-dictionary-definition h1 {
-    background-color: var(--mdpopups-admon-success-bg);
-    color: var(--mdpopups-admon-success-title-fg);
-    font-size: 12px;
-    line-height: 12px;
-    margin: 0 -18px 10px -10px;
-    padding: 10px;
-}
-.mac-dictionary-definition p {
-    margin: 6px 0;
-}
-
-.mac-dictionary-definition .close-wrapper {
-    margin-top: 20px;
-}
-
-.mac-dictionary-definition .close {
-    background-color: var(--mdpopups-admon-error-bg);
-    color: var(--mdpopups-admon-error-fg);
-    font-size: 10px;
-    padding: 1px 6px;
-    text-decoration: none;
-}
-'''
 POPUP_MAX_WIDTH = 400
 
 
@@ -86,11 +47,16 @@ class MacDictionaryBruteEventListener(sublime_plugin.EventListener):
         if not word_raw:
             return
 
-        popup = MacDictionaryPopup(view)
-        word, definition = popup.get_definition(word_raw)
+        try:
+            word, definition = get_definition(word_raw)
+        except MacDictionaryError as e:
+            status_message(view, e.args[0])
+            return
+            
         if not definition:
             return
 
+        popup = MacDictionaryPopup(view)
         popup.show_popup(region, word, definition)
 
 
@@ -108,12 +74,18 @@ class MacDictionaryShowDefForSelectionCommand(sublime_plugin.TextCommand):
             status_message(self.view, 'The selected text is empty.')
             return
 
-        popup = MacDictionaryPopup(self.view)
-        word, definition = popup.get_definition(word_raw)
+        try:
+            word, definition = get_definition(word_raw)
+        except MacDictionaryError as e:
+            status_message(self.view, e.args[0])
+            return
+
         if not definition:
             return
 
+        popup = MacDictionaryPopup(self.view)
         popup.show_popup(region, word, definition)
+
 
     def _get_selected_region_info(self):
         region = self.view.sel()[0]
@@ -122,20 +94,9 @@ class MacDictionaryShowDefForSelectionCommand(sublime_plugin.TextCommand):
 
 
 class MacDictionaryPopup:
+    '''Controls popup windows.'''
     def __init__(self, view):
         self.view = view
-
-    def get_definition(self, word):
-        runner = MacDictionaryRunner()
-        runner.run(word)
-
-        if not runner.success:
-            status_message(self.view, runner.error)
-            return None, None
-
-        output = json.loads(runner.output)
-
-        return output['word'], output['definition']
 
     def show_popup(self, region, word, definition):
         popup_info = self._prepare_popup_info(region, word, definition)
@@ -150,8 +111,8 @@ class MacDictionaryPopup:
         return {'data': data, 'location': region.end()}
 
     def _do_show_popup(self, popup_info):
-        if mdpopups.is_popup_visible(self.view):
-            mdpopups.hide_popup(self.view)
+        if self.view.is_popup_visible():
+            self.view.hide_popup()
 
         data = popup_info['data']
         content = POPUP_TEMPLATE.format(
@@ -160,14 +121,11 @@ class MacDictionaryPopup:
             definition=data['definition'],
         )
 
-        mdpopups.show_popup(
-            self.view,
+        self.view.show_popup(
             content,
-            css=POPUP_CSS,
             flags=sublime.HIDE_ON_MOUSE_MOVE_AWAY,
             location=popup_info['location'],
             max_width=POPUP_MAX_WIDTH,
-            wrapper_class=POPUP_WRAPPER_CLASS,
             on_navigate=self.on_popup_navigate,
         )
 
@@ -181,12 +139,25 @@ class MacDictionaryPopup:
                 message = 'Dictionary.app could not be opened.'
                 status_message(self.view, message)
 
-            mdpopups.hide_popup(self.view)
+            self.view.hide_popup()
         elif href == POPUP_HREF_CLOSE:
-            mdpopups.hide_popup(self.view)
+            self.view.hide_popup()
 
     def _escape(self, string):
         return html.escape(string, False)
+
+
+def get_definition(word):
+    '''Gets the definition of word.'''
+    runner = MacDictionaryRunner()
+    runner.run(word)
+
+    if not runner.success:
+        raise MacDictionaryError(runner.error)
+
+    output = json.loads(runner.output)
+
+    return output['word'], output['definition']
 
 
 class MacDictionaryRunner:
@@ -228,6 +199,11 @@ class MacDictionaryRunner:
 
     def _get_env(self):
         return os.environ.copy()
+
+
+class MacDictionaryError(Exception):
+    '''Custom error class.'''
+    pass
 
 
 class MacDictionaryBruteModeSwitchCommand(sublime_plugin.WindowCommand):

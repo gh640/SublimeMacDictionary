@@ -1,6 +1,6 @@
 # MacDictionary
 
-A Sublime Text 3 package which provides a popup function for the macOS dictionary service.
+A Sublime Text 3 / 4 package which provides a popup function for the macOS dictionary service.
 
 ![SublimeMacDictionary capture](https://raw.githubusercontent.com/gh640/SublimeMacDictionary/master/assets/images/capture.png)
 
